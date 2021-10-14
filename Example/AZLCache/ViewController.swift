@@ -7,12 +7,17 @@
 //
 
 import UIKit
+import AZLCache
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+//        let cahce = AZLCodableLRUCache<String>()
+//        cahce.saveCacheToDisk(path: "")
+//        AZLCodableLRUCache<String>.loadCacheFromDisk(path: "")
     }
 
     override func didReceiveMemoryWarning() {

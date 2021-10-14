@@ -7,7 +7,8 @@
 
 import UIKit
 
-public class AZLCodableLRUCache<T: Codable>: AZLLRUCache<T>, Codable, AZLDiskCacheProtocol {
+public class AZLCodableLRUCache<T: Codable>: AZLLRUCache<T>, AZLCodableDiskCacheProtocol {
+    public typealias CacheObject = AZLCodableLRUCache<T>
     
     /// 归档
     private enum CodingKeys: String, CodingKey {
@@ -52,20 +53,4 @@ public class AZLCodableLRUCache<T: Codable>: AZLLRUCache<T>, Codable, AZLDiskCac
         try container.encode(self.allKey(), forKey: .keyArray)
     }
     
-    /// 缓存到硬盘
-    public func saveCacheToDisk(path: String) {
-        let data = try? JSONEncoder().encode(self)
-        try? data?.write(to: URL.init(fileURLWithPath: path))
-        
-    }
-    
-    /// 从硬盘读取缓存
-    public static func loadCacheFromDisk(path: String) -> AZLCodableLRUCache<T>? {
-        if let data = try? Data.init(contentsOf: URL.init(fileURLWithPath: path)) {
-            if let obj = try? JSONDecoder().decode(AZLCodableLRUCache<T>.self, from: data) {
-                return obj
-            }
-        }
-        return nil
-    }
 }
