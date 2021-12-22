@@ -20,6 +20,7 @@ public class AZLCodableLRUCache<T: Codable>: AZLLRUCache<T>, AZLCodableDiskCache
         super.init()
     }
     
+    /// Codable 的协议 由系统调用 解档
     required public init(from decoder: Decoder) throws {
         super.init()
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -45,6 +46,7 @@ public class AZLCodableLRUCache<T: Codable>: AZLLRUCache<T>, AZLCodableDiskCache
         self.listTail = preNode
     }
     
+    /// Codable 的协议 由系统调用 归档
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
