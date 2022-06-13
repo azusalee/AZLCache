@@ -5,12 +5,15 @@
 //  Created by lizihong on 2021/10/14.
 //
 
-import UIKit
+import Foundation
 
+/**
+支持codable lru cache
+ */
 public class AZLCodableLRUCache<T: Codable>: AZLLRUCache<T>, AZLCodableDiskCacheProtocol {
     public typealias CacheObject = AZLCodableLRUCache<T>
     
-    /// 归档
+    /// 归档Key
     private enum CodingKeys: String, CodingKey {
         case keyValueDict
         case keyArray

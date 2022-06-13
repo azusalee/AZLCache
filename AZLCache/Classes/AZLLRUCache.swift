@@ -7,6 +7,9 @@
 
 import Foundation
 
+/**
+最近使用缓存类
+ */
 public class AZLLRUCache<T: Any>: NSObject {
     /// 缓存字典
     internal var cacheDict: [String: AZLDoubleLinkListNode<T>] = [:]
@@ -25,10 +28,8 @@ public class AZLLRUCache<T: Any>: NSObject {
         self.clearAllCache()
     }
     
-    /**
-    移到链头
-    @param node 需要移到链头的节点
-    */
+    /// 移到链头
+    /// - Parameter node: 需要移到链头的节点
     private func moveToHead(node: AZLDoubleLinkListNode<T>) {
         if node == self.listHead {
             // 自己就是头部，不用处理
@@ -56,11 +57,10 @@ public class AZLLRUCache<T: Any>: NSObject {
         self.listHead = node
     }
     
-    /**
-    存值
-    @param key 存储的key
-    @param value 储存的对象
-    */ 
+    /// 存值
+    /// - Parameters:
+    ///   - key: 存储的key
+    ///   - value: 储存的对象
     public func storeCache(key: String, value: T) {
         if let cacheValue = self.cacheDict[key] {
             self.moveToHead(node: cacheValue)
@@ -84,44 +84,35 @@ public class AZLLRUCache<T: Any>: NSObject {
         }
     }
     
-    /**
-    获取第一个值(最近储存的值)
-    @return T 泛型 缓存的值
-    */ 
+    /// 获取第一个值(最近储存的值)
+    /// - Returns: 泛型 缓存的值
     public func firstCache() -> T? {
         return self.listHead?.value
     }
     
-    /**
-    获取最后一个值(最旧储存的值)
-    @return T 泛型 缓存的值
-    */ 
+    /// 获取最后一个值(最旧储存的值)
+    /// - Returns: 泛型 缓存的值
     public func lastCache() -> T? {
         return self.listTail?.value
     }
     
-    /**
-    获取第一个key(最近储存的key)
-    @return String 字符串key
-    */ 
+    /// 获取第一个key(最近储存的key)
+    /// - Returns: 字符串key
     public func firstKey() -> String? {
         return self.listHead?.key
     }
     
-    /**
-    获取最后一个key(最旧储存的key)
-    @return String 字符串key
-    */ 
+    /// 获取最后一个key(最旧储存的key)
+    /// - Returns: 字符串key
     public func lastKey() -> String? {
         return self.listTail?.key
     }
     
-    /**
-    取指定key的值
-    @param key 字符串key
-    @param needMoveHead 是否需要把对应的值移到表头
-    @return T 泛型 缓存的值
-    */ 
+    /// 取指定key的值
+    /// - Parameters:
+    ///   - key: 字符串key
+    ///   - needMoveHead: 是否需要把对应的值移到表头
+    /// - Returns: 泛型 缓存的值
     public func getCache(key: String, needMoveHead: Bool = true) -> T? {
         if let cacheValue = self.cacheDict[key] {
             if needMoveHead {
@@ -132,10 +123,8 @@ public class AZLLRUCache<T: Any>: NSObject {
         return nil
     }
     
-    /**
-    移除指定值
-    @param key 字符串key
-    */ 
+    /// 移除指定值
+    /// - Parameter key: 字符串key
     public func removeCache(key: String) {
         if let node = self.cacheDict[key] {
             let prev = node.preNode
@@ -156,33 +145,16 @@ public class AZLLRUCache<T: Any>: NSObject {
         }
     }
     
-    /**
-    当缓存数量达到指定值调用，清除最后一个缓存
-    */ 
+    /// 当缓存数量达到指定值调用，清除最后一个缓存
     private func autoClearCache() {
         // 移除最后一个
         guard let lastKey = self.lastKey() else {
             return
         }
         self.removeCache(key: lastKey)
-    
-//        var clearCount = Int(Double(self.maxCacheCount)*0.5)
-//        var tailNode = self.listTail
-//        while clearCount > 0 && tailNode != nil {
-//            tailNode?.nextNode = nil
-//            self.cacheDict.removeValue(forKey: tailNode?.key ?? "")
-//            let prev = tailNode?.preNode
-//            tailNode?.preNode = nil
-//            tailNode = prev
-//            clearCount -= 1
-//        }
-//        tailNode?.nextNode = nil
-//        self.listTail = tailNode
     }
     
-    /**
-    清空全部缓存
-    */ 
+    /// 清空全部缓存
     public func clearAllCache() {
         /// 清除双向链表
         var node = self.listHead
@@ -198,10 +170,8 @@ public class AZLLRUCache<T: Any>: NSObject {
         
     }
     
-    /**
-    全部缓存(全部value)
-    @param [T] 缓存的数组
-    */ 
+    /// 全部缓存(全部value)
+    /// - Returns: 缓存的数组
     public func allCache() -> [T] {
         var node = self.listHead
         var array: [T] = []
@@ -214,10 +184,8 @@ public class AZLLRUCache<T: Any>: NSObject {
         return array
     }
     
-    /**
-    获取全部Key
-    @return [String] 全部key的数组
-    */ 
+    /// 获取全部Key
+    /// - Returns: 全部key的数组
     public func allKey() -> [String] {
         var node = self.listHead
         var array: [String] = []
@@ -230,10 +198,8 @@ public class AZLLRUCache<T: Any>: NSObject {
         return array
     }
     
-    /**
-    获取全部keyValue
-    @return [String: T] 把所有缓存以字典方式返回
-    */ 
+    /// 获取全部keyValue
+    /// - Returns: 把所有缓存以字典方式返回
     public func keyValueDict() -> [String: T] {
         var keyValueDict: [String: T] = [:]
         for (key, cache) in self.cacheDict {
@@ -242,10 +208,8 @@ public class AZLLRUCache<T: Any>: NSObject {
         return keyValueDict
     }
     
-    /**
-    当前缓存数量
-    @return Int 已缓存的数量
-    */ 
+    /// 当前缓存数量
+    /// - Returns: 已缓存的数量
     public func count() -> Int {
         return self.cacheDict.count
     }
